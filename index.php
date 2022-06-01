@@ -1,6 +1,6 @@
 <?php
 
-    session_start();
+    // Create error log file and write and errors if exists
     error_reporting(1);
     
     include $_SERVER['DOCUMENT_ROOT'] . '/app/database/config.php';
@@ -25,14 +25,17 @@
                     <h4>Latest registered</h4>
                     <div class="row gutters-sm">
                         <?php
-
+                            // Get information from members table
                             $sql = "SELECT * FROM members";
                             $query = $db->prepare($sql);
+                            // Executes a prepared statement
                             $query->execute();
+                            // Fetches the row and returns it as an object
                             $result = $query->fetchAll(PDO::FETCH_OBJ);
                             $u = 1;
-
+                            // Returns the number of rows affected by the last SQL statement
                             if ($query->rowCount() > 0) {
+                                // On each iteration, the value of the current element is assigned to user.
                                 foreach ($result as $user) {
 
                         ?>
@@ -52,6 +55,7 @@
                             </div>
                         </div>
                         <?php
+                                // Increas if exists more users
                                 $u = $u+1;
                                 }
                             } else {
