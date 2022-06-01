@@ -1,6 +1,5 @@
 <?php
 
-    session_start();
     error_reporting(1);
     
     include $_SERVER['DOCUMENT_ROOT'] . '/app/database/config.php';
@@ -94,6 +93,7 @@
                             <tbody>
                                 <?php
                                         foreach ($result as $user) {
+                                            // Split a string by a string
                                             $parts = explode("@", $user->email);
                                 ?>
                                 <tr>
@@ -110,6 +110,7 @@
                         </table>
                         <?php
                             } else {
+                                // If there is no records in our database provide user this message and hide complete above table
                                 echo "No records now!";
                             }
                         ?>
