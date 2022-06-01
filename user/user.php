@@ -28,7 +28,7 @@
         $u = 1;
     }
 
-    $from = 'noreply@ccwebspot.com';
+    $from = 'noreply@example.com';
     $sendTo = $user['email'];
     $subject = 'Chuck Norris Challenge';
     $message = html_entity_decode(ChuckNorrisChallenge());
@@ -125,7 +125,7 @@
         $(function () {
             $('#chucknorris').on('submit', function (e) {
                 if (!e.isDefaultPrevented()) {
-                    var url = "https://challenge.ccwebspot.com/user/<?php echo htmlentities($user['username']); ?>";
+                    var url = "https://example.com/user/<?php echo htmlentities($user['username']); ?>";
                     $.ajax({
                         type: "POST",
                         url: url,
