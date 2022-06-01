@@ -13,14 +13,14 @@
         $generateName = strtolower($file);
         // Replace all occurrences of the search string with the replacement string and give a image new name
         $generatedFile = str_replace(' ', '-', $generateName);
-        // Collect information from registration form
-        $firstName = $_POST['firstName'];
-        $lastName = $_POST['lastName'];
-        $email = $_POST['email'];
-        $username = $_POST['username'];
-        $phone = $_POST['phone'];
-        $address = $_POST['address'];
-        $position = $_POST['position'];
+        // Collect information from registration form & Strip whitespace (or other characters) from the beginning and end of a string
+        $firstName = trim($_POST['firstName']);
+        $lastName = trim($_POST['lastName']);
+        $email = trim($_POST['email']);
+        $username = trim($_POST['username']);
+        $phone = trim($_POST['phone']);
+        $address = trim($_POST['address']);
+        $position = trim($_POST['position']);
         // Moves an uploaded file to a new location
         if (move_uploaded_file($file_location, $directory . $generatedFile)) {
             $photo = $generatedFile;
