@@ -1,9 +1,7 @@
 <?php
-
-    session_start();
-    session_regenerate_id(true);
     
     include $_SERVER['DOCUMENT_ROOT'] . '/app/database/config.php';
+    // Magic, on click user will get complete database records in .XSL extension
 
 ?>
 <table border="1">
@@ -19,6 +17,7 @@
     </thead>
     <?php
 
+        // Provide name to the generated file
         $filename = 'User lists - Coding Challenge';
         $sql = "SELECT * FROM members";
         $query = $db->prepare($sql);
