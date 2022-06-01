@@ -1,6 +1,5 @@
 <?php
 
-    session_start();
     error_reporting(1);
     
     include $_SERVER['DOCUMENT_ROOT'] . '/app/database/config.php';
