@@ -1,6 +1,5 @@
 <?php
 
-    session_start();
     error_reporting(1);
 
     include $_SERVER['DOCUMENT_ROOT'] . '/app/database/config.php';
@@ -15,11 +14,12 @@
 
     if (null === $username) {
         /**
-         * Ukoliko korisnik manuelno upise razlicit id, automatski ce biti redirektovan na prethodnu stranicu 
+         * If a user with a username or id tries to enter another username or id, it will be automatically redirected to the home page
          * 
         */
         header('../index');
     } else {
+        // Collect user information and make from ?id to username to make SEO Friendly URL's
         $sql = "SELECT * FROM members WHERE username=:username";
         $query = $db->prepare($sql);
         $query->bindParam(':username', $username, PDO::PARAM_INT);
@@ -27,15 +27,17 @@
         $user = $query->fetch(PDO::FETCH_ASSOC);
         $u = 1;
     }
-
+    // Code to send email to user and get Chuck Norris random Joke
     $from = 'noreply@example.com';
     $sendTo = $user['email'];
     $subject = 'Chuck Norris Challenge';
+    // Convert HTML entities to their corresponding characters
     $message = html_entity_decode(ChuckNorrisChallenge());
     $okMessage = $message . " - Was send to " . "<b>" . $user['firstName'] . "</b>";
     $errorMessage = "Problem with sendign a joke!";
     try {
         if (!empty($_POST)) {
+            // HTML Template
             $emailText = '<!DOCTYPE html>
             <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">
             <head>
@@ -99,13 +101,16 @@
             </html>';
             $headers = array('From: ' . $from . "\r\n" . 'Reply-To: ' . $from . "\r\n" . 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/html; charset=iso-8859-1' . "\r\n" . 'X-Mailer: PHP/' . phpversion());
             mail($sendTo, $subject, $emailText, implode("\n", $headers));
+            // Display message to the user that joke was sent successfully
             $responseArray = array('type' => 'success', 'message' => $okMessage);
         }
     } catch (Exception $e) {
+        // if problem exists
         $responseArray = array('type' => 'danger', 'message' => $e->getMessage());
     }
 
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        // Returns the JSON representation of a value
         $encoded = json_encode($responseArray);
         header('Content-Type: application/json');
         echo $encoded;
@@ -121,29 +126,30 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="../public/css/style.css">
+        <!-- Display errors without refreshing the page using ajax -->
         <script>
-        $(function () {
-            $('#chucknorris').on('submit', function (e) {
-                if (!e.isDefaultPrevented()) {
-                    var url = "https://example.com/user/<?php echo htmlentities($user['username']); ?>";
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: $(this).serialize(),
-                        success: function (data) {
-                            var messageAlert = 'alert-' + data.type;
-                            var messageText = data.message;
-                            if (messageAlert && messageText) {
-                                $('#chucknorris').find('.messages').html(alertBox);
-                                $('#chucknorris')[0].reset();
+            $(function () {
+                $('#chucknorris').on('submit', function (e) {
+                    if (!e.isDefaultPrevented()) {
+                        var url = "https://example.com/user/<?php echo htmlentities($user['username']); ?>";
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            data: $(this).serialize(),
+                            success: function (data) {
+                                var messageAlert = 'alert-' + data.type;
+                                var messageText = data.message;
+                                if (messageAlert && messageText) {
+                                    $('#chucknorris').find('.messages').html(alertBox);
+                                    $('#chucknorris')[0].reset();
+                                }
                             }
-                        }
-                    });
-                    return false;
-                }
-            })
-        });
-    </script>
+                        });
+                        return false;
+                    }
+                })
+            });
+        </script>
     </head>
     <body>
         
@@ -174,6 +180,7 @@
                                                 <input type="submit" class="btn btn-outline-primary" name="send" value="Poke <?php echo htmlentities($user['firstName']); ?> with Chuck Norris Joke">
                                             </form>
                                         </div>
+                                        <!-- Display user successfull message and display what user will recieve -->
                                         <p><?php if ($responseArray) { echo "<div class='alert alert-success' role='alert'>" . $responseArray['message'] . "</div>"; } ?></p>
                                     </div>
                                 </div>
